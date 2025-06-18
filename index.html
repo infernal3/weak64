@@ -1,11 +1,96 @@
 <!doctypehtml><html>
   <head>
+    <style>
+      @media(prefers-color-scheme:light){
+        :root{
+          --on: #333333;
+          --off: #eeeeee;
+          --base: #000000;
+          --bgbase: #fdfdfd;
+        }
+      }
+      @media(prefers-color-scheme:dark){
+        :root{
+          --bgbase:#080808;
+          --base: #ffffff;
+          --on: #dddddd;
+          --off: #222222;
+        }
+      }
+      :root{
+        background:var(--bgbase);
+        color:var(--base);
+        font-family:'Segoe UI', Arial, Helvetica, sans-serif;
+      }
+      button{
+        background:var(--off);
+        color:var(--base);
+      }
+      div.on{
+        border: var(--on) solid 3px;
+        height:60px;
+      }
+      div.off{
+        border:3px transparent;
+        background:var(--off);
+        height:60px;
+      }
+    </style>
   </head>
   <body>
     <h1>weak64</h1><br>
     <p>A very bare-bones base64 decoder and encoder.</p><br>
-    <textarea>
-      
-    </textarea>
+    <div>
+      <div id="d1" class="on" contenteditable="true"></div><br>
+      <div id="d2" class="off" contenteditable="false"></div>
+    </div>
+    <p>Click the below button to <span id="s0">encode</span>:</p>
+    <button id="b">Encode!</button>
+    <br><br>
+    <button id="s">Click me to switch to <span id="s1">Decode</span> Mode.</button>
+    <br><button id="c">Copy output to clipboard</button>
   </body>
+  <script>
+    var el=e=>document.getElementById(e),m=true;
+    el("c").addEventListener('click',E=>{
+      if(m){
+        navigator.clipboard.writeText(el("d2").textContent);
+      }else{
+        navigator.clipboard.writeText(el("d1").textContent);
+      }
+    });
+    el("b").addEventListener('click',E=>{
+      if(m){
+        el("d2").textContent=btoa(el("d1").textContent);
+      }else{
+        var temp="";
+        try{
+          temp=atob(el("d2").textContent);
+          el("d1").textContent=temp;
+        }catch(e){
+          el("d1").textContent=e;
+        }
+      }
+    });
+    el("s").addEventListener('click',E=>{
+      if(m){
+        el("d1").contentEditable="false";
+        el("d2").contentEditable="true";
+        el("d1").className="off";
+        el("d2").className="on";
+        el("b").textContent="Decode!";
+        el("s0").textContent="decode";
+        el("s1").textContent="Encode";
+      }else{
+        el("d1").contentEditable="true";
+        el("d2").contentEditable="false";
+        el("d1").className="on";
+        el("d2").className="off";
+        el("b").textContent="Encode!";
+        el("s0").textContent="encode";
+        el("s1").textContent="Decode";
+      }
+      m=!m;
+    })
+  </script>
 </html>
